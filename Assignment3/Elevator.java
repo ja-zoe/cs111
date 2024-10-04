@@ -13,12 +13,18 @@ public class Elevator {
         int floors = Integer.parseInt(args[0]);
         int requests = Integer.parseInt(args[1]);
         int restrictedFloors = Integer.parseInt(args[2]);
-        int passcode;
+        int passcode = -1;
         
-        try {
+        if(args.length > 3) {
             passcode = Integer.parseInt(args[3]);
-        } catch (Exception e) {
-            passcode = -1;
+            if (passcode < 0) {
+                return;
+            }
+        }
+
+
+        if (restrictedFloors < 0 | requests < 0 | requests < 0) {
+            return;
         }
 
         int elevatorOneFloor = 1;
@@ -26,49 +32,28 @@ public class Elevator {
 
         while (requests > 0) {
             int currentFloorRequest = requests % 10;
+            requests = requests / 10;
+            int elevatorOneDistance = Math.abs(elevatorOneFloor - currentFloorRequest);
+            int elevatorTwoDistance = Math.abs(elevatorTwoFloor - currentFloorRequest);
+            if (elevatorOneDistance <= elevatorTwoDistance) {
+                elevatorOneFloor = currentFloorRequest;
+                System.out.println("1 " + currentFloorRequest);
+            } else {
+                elevatorTwoFloor = currentFloorRequest;
+                System.out.println("2 " + currentFloorRequest);
+            }
             if (currentFloorRequest > floors - restrictedFloors) {
                 if (hasAccess(passcode, floors, currentFloorRequest)) {
-                    if (elevatorOneFloor == elevatorTwoFloor) {
-                        System.out.println("1 " + currentFloorRequest);
-                        elevatorOneFloor = currentFloorRequest;
-                    } else {
-                        int elevatorOneDistance = Math.abs(elevatorOneFloor - currentFloorRequest);
-                        int elevatorTwoDistance = Math.abs(elevatorTwoFloor - currentFloorRequest);
-                        if (elevatorOneDistance < elevatorTwoDistance) {
-                            System.out.println("1 " + currentFloorRequest);
-                            elevatorOneFloor = currentFloorRequest;
-                        } else {
-                            System.out.println("2 " + currentFloorRequest);
-                            elevatorTwoFloor = currentFloorRequest;
-                        }
-                    }
                     System.out.println("Granted");
                 } else {
                     System.out.println("Denied");
                 }
-            } else {
-                if (elevatorOneFloor == elevatorTwoFloor) {
-                    System.out.println("1 " + currentFloorRequest);
-                    elevatorOneFloor = currentFloorRequest;
-                } else {
-                    int elevatorOneDistance = Math.abs(elevatorOneFloor - currentFloorRequest);
-                    int elevatorTwoDistance = Math.abs(elevatorTwoFloor - currentFloorRequest);
-                    if (elevatorOneDistance < elevatorTwoDistance) {
-                        System.out.println("1 " + currentFloorRequest);
-                        elevatorOneFloor = currentFloorRequest;
-                    } else {
-                        System.out.println("2 " + currentFloorRequest);
-                        elevatorTwoFloor = currentFloorRequest;
-                    }
-                }
-            }
-
-            requests = requests / 10;
+            } 
         }
     }
 
     public static boolean hasAccess(int password, int floors, int requestedFloor) {
-        if (password % floors == requestedFloor | (password % floors == 0 & requestedFloor == floors)) {
+        if (password % floors == requestedFloor || (password % floors == 0 && requestedFloor == floors)) {
             return true;
         }
         return false;

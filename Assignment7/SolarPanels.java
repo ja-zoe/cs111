@@ -116,11 +116,9 @@ public class SolarPanels {
      */
     public void updateActualEfficiency(int temperature, double coefficient) {
         // WRITE YOUR CODE HERE
-        int len = panels.length;
-        int width = panels[0].length;
         double efficiencyLoss = coefficient * (temperature - 77);
-        for (int i = 0; i < len; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < panels.length; i++) {
+            for (int j = 0; j < panels[i].length; j++) {
                 if (panels[i][j] != null) {
                     double actualEfficiency = panels[i][j].getRatedEfficiency() - efficiencyLoss;
                     panels[i][j].setActualEfficiency(actualEfficiency);
